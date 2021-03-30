@@ -1,12 +1,12 @@
 #include<iostream>
 #include <list>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 class Graph {
     int V;
     list<int> *adj;
-    void DFS_visit(int v, bool visited[]);
 public:
     Graph(int V);
     void addEdge(int v, int w);
@@ -22,59 +22,67 @@ void Graph::addEdge(int v, int w) {
     adj[v].push_back(w);
 }
 
-void Graph::DFS_visit(int v, bool visited[]) {
+// Perform iterative DFS starting from node v 
+void Graph::DFS(int v) {
+    // Initially mark all nodes as not visited
+    vector<bool> visited(V, false);
+ 
+    // Create a stack for DFS
+    stack<int> stack;
+ 
+    // Push the current node.
+    stack.push(v);
+ 
+    while (!stack.empty()) {
 
-    visited[v] = true;
-    cout << v << " ";
-    list<int>::iterator i;
+        // Pop a node from stack and print it
+        v = stack.top();
+        stack.pop();
+ 
+        if (visited[v]) {
+            continue;
+        }
 
-    for (i = adj[v].begin(); i != adj[v].end(); i++) {
-        if (!visited[*i]) {
-            DFS_visit(*i, visited);
+        visited[v] = true;
+        cout << v << " ";
+ 
+        // do for every edge v -> u
+        for (auto i = adj[v].begin(); i != adj[v].end(); i++) {
+            if (!visited[*i]) {
+                stack.push(*i);
+            }
         }
     }
 }
 
-
-void Graph::DFS(int v) {
-    // Mark all the vertices as not visited
-    bool *visited = new bool[V];
-    for (int i = 0; i < V; i++) {
-        visited[i] = false;
-    }
-
-  DFS_visit(v, visited);
-}
-
 int main() {
-    /*
-    Graph g(4);
-    g.addEdge(0, 1);
-    g.addEdge(0, 2);
-    g.addEdge(1, 2);
-    g.addEdge(2, 0);
-    g.addEdge(2, 3);
-    g.addEdge(3, 3);
-
-    cout << "Following is Depth First Traversal \n";
-    int n;
-    cin>>n;
-    g.DFS(n);
-    */
-    cout << "Enter n m:" << endl;
     int n, m;
     cin >> n >> m;
-    cout << "n:" << n << ", m:" << m << endl; // DEBUG
     Graph g(n);
+
+    int source_nodes[n];
+    // Set all nodes as sources
+    std::fill_n(source_nodes, n, 1);
+
     // Wait for m dependencies
     int x, y;
     for (int i = 0; i < m; i++) {
         cout << "Enter a dependency:" << endl;
         cin >> x >> y;
         g.addEdge(x, y);
+        
+        source_nodes[y-1] = 0; // Removes node y from the array of source nodes, simply setting as 0
     }
 
-    g.DFS(2);
+    // The amount of source nodes is the minimum number of interventions needed to take it all down
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        if (source_nodes[i] != 0) {
+            count++;
+        }
+    }
+
+    cout << count;
 
     return 0;
 }
