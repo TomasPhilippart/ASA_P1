@@ -81,20 +81,24 @@ int Graph::findLongestPath(int n, int source_nodes[]) {
 		longest = max(longest, dp[i]);
 	}
 
-	
 	free(dp);
 	free(visited);
 	return longest;
 }
 
 int main() {
-	int n, m;
+	// Used to turn off synchronization with C I/O functions
+	// See: http://gcc.gnu.org/onlinedocs/libstdc++/manual/io_and_c.html
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int n, m;	
 	cin >> n >> m;
 	Graph g(n);
 
 	int *source_nodes = (int *) malloc(sizeof(int) * (n+1));
 	// Set all nodes as sources
-	std::fill_n(source_nodes+1, n+1, 1);
+	std::fill_n(source_nodes, n+1, 1);
 
 	// Wait for m dependencies
 	int x, y, target_count = 0;
@@ -108,7 +112,7 @@ int main() {
         }
 	}
     
-	cout << n - target_count << " " << g.findLongestPath(n+1, source_nodes);
+	cout << n - target_count << " " << g.findLongestPath(n+1, source_nodes) << endl;
 	free(source_nodes);
 	return 0;
 }
