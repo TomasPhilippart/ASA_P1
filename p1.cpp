@@ -77,7 +77,7 @@ int Graph::findLongestPath(int n, int source_nodes[]) {
 	int longest = 0;
   
 	// Traverse and find the maximum of all dp[i]
-	for (int i = 1; i <= n; i++) {
+	for (int i = 1; i < n; i++) {
 		longest = max(longest, dp[i]);
 	}
 
